@@ -1,0 +1,140 @@
+Jenkins Installation Setup with Two Agents (win-agent and lose-agent)
+1. Overview
+This documentation provides a step-by-step guide on how to install Jenkins on a master node and configure two agents:
+
+win-agent
+lose-agent
+
+Jenkins is an open-source automation server that is commonly used for continuous integration (CI) and continuous delivery (CD). It allows you to automate the build, test, and deployment processes.
+ 
+2. Prerequisites
+Before starting the installation, ensure the following:
+
+Master Node (Jenkins Server): A machine where Jenkins will be installed.
+
+OS: Windows, Linux, or macOS.
+Java 8 or higher should be installed.
+win-agent:
+
+A machine with Windows 10 or Server version.
+Java 8 or higher installed.
+lose-agent:
+
+A machine with any popular Linux distribution (e.g., Ubuntu, CentOS).
+Java 8 or higher installed.
+
+3. Jenkins Installation on Master Node
+A. Install Jenkins on Master Node
+Download Jenkins:
+
+For Windows:
+
+Download the Jenkins installer from the official website: Jenkins Download Page.
+Choose the Windows installer (e.g., .msi).
+For Linux:
+
+Follow the instructions for your Linux distribution (e.g., Ubuntu, CentOS).
+For Ubuntu:
+
+sudo apt update
+sudo apt install openjdk-17-jdk
+wget -q -O - https://pkg.jenkins.io/keys/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian/ jenkins.io/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update
+sudo apt install jenkins
+
+Start Jenkins:
+
+For Windows, run the installer and follow the installation steps.
+For Linux:
+
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+
+Access Jenkins:
+
+Once Jenkins is running, open a browser and navigate to:
+
+http://localhost:8080
+If it's installed on a remote machine, use the IP address or hostname instead.
+
+Unlock Jenkins:
+
+To unlock Jenkins, retrieve the unlock key from the following location:
+Windows: C:\Program Files (x86)\Jenkins\secrets\initialAdminPassword
+Linux: /var/lib/jenkins/secrets/initialAdminPassword
+Copy and paste the key into the Jenkins setup page.
+
+Install Suggested Plugins:
+
+On the setup wizard, Jenkins will ask you to install plugins. Select "Install suggested plugins."
+Create First Admin User:
+
+After the plugin installation, Jenkins will prompt you to create the first admin user. Set the user credentials.
+
+4. Setup and Configure Agents
+A. Configure win-agent
+Prepare the Windows Agent Machine:
+
+Ensure Java is installed on the agent machine.
+
+java -version
+If Java is not installed, download and install it from Java Official sit.
+Add win-agent as a Node in Jenkins:
+
+From the Jenkins dashboard (on the master node), go to Manage Jenkins → Manage Nodes and Clouds → New Node.
+Enter the node name (e.g., win-agent).
+Select Permanent Agent and click OK.
+
+Configure win-agent:
+
+In the node configuration, provide:
+Remote Root Directory: The directory on the agent machine where Jenkins will store files. Example: C:\jenkins
+Labels: Labels can be used to group agents and assign jobs to specific agents.
+Launch method: Select Launch agent via Java Web Start.
+
+Generate Agent Connection Command:
+
+Click Save to generate the agent launch command.
+On the Jenkins master node, click Launch. This will generate a command to run on the win-agent machine.
+Copy the JNLP file provided for the Windows agent.
+Run the Agent on the win-agent Machine:
+
+On the Windows agent machine, double-click the JNLP file to start the agent. This will establish the connection to the Jenkins master.
+Verify Agent is Online:
+
+Once the agent starts, check the Manage Nodes page in Jenkins. The win-agent should show as Online.
+B. Configure lose-agent
+Follow same steps as win-agent.
+
+The agent will show up as Online once the connection is successful.
+
+5. Verifying the Setup
+Test the Agents:
+
+Create a simple Jenkins job (e.g., a freestyle project/pipeline) and assign it to run on the win-agent or lose-agent, using the Restrict where this project can be run option (under the General section).
+Build the job and verify that it runs successfully on the designated agent.
+
+Monitor the Agents:
+
+You can monitor the status of the agents from Manage Jenkins → Manage Nodes.
+Both win-agent and lose-agent should be online if everything is set up correctly.
+
+6. Troubleshooting
+win-agent:
+
+If the agent doesn't connect, ensure that Java is properly installed and that the JNLP file is being executed correctly.
+Check the firewall settings to ensure that Jenkins can communicate through the required port (default: 8080).
+lose-agent:
+
+If Jenkins cannot connect via SSH, verify that SSH is properly configured and that the correct SSH keys are in place.
+Ensure the agent machine's firewall allows incoming connections on port 22 (for SSH).
+
+7. Conclusion
+You have now set up Jenkins on a master node with two agents: win-agent (Windows) and lose-agent (Linux). These agents will allow Jenkins to distribute workloads across different operating systems, making the CI/CD pipeline more flexible and scalable.
+
+8. Additional Resources
+Jenkins Official Documentation
+Jenkins Agent Configuration
+
+This documentation outlines the installation and setup process in detail. If you need more specific steps or additional configuration, feel free to ask!
